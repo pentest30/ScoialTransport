@@ -3,7 +3,11 @@
 <div class="box-body table-responsive" style="margin-top:0">
 
     <div class="row ">
-        <div style="margin: 20px" >
+        <div class="col-xs-12">
+             <a onclick="getExcel(); return false;" class="btn btn-small btn-primary">@_loc.GetLocalizedHtmlString("Export Excel").Value <i class="fa fa-file"></i></a>
+
+        </div>
+        <div >
 
             @(Html.Ext().Grid<DriverDailyActivityVViewModel>()
                 .Name("socialData").RowId("id").ClassName("table table-bordered dataTable")
@@ -44,6 +48,9 @@
         $("#modal-tacho-tile").html("@_loc.GetLocalizedHtmlString("Time line Activities of") "+moment(currentItem.date).format("DD-MM-YYYY"))
         $("#tacho-modal").modal("show");
         //console.log(currentItem);
+    }
+    function getExcel() {
+        window.location = "@Url.Action("ExportExcel")" ;
     }
 
   </script>

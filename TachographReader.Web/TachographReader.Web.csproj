@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="DataTables.AspNetCore.Mvc" Version="1.4.2" />
+    <PackageReference Include="EPPlus" Version="5.1.1" />
     <PackageReference Include="LazZiya.ExpressLocalization" Version="4.0.0" />
     <PackageReference Include="Localization.AspNetCore.TagHelpers" Version="0.6.0" />
     <PackageReference Include="MediatR" Version="8.0.1" />
@@ -31,6 +32,7 @@
 
   <ItemGroup>
     <Folder Include="Controllers\Api\" />
+    <Folder Include="wwwroot\reports\" />
     <Folder Include="wwwroot\uploads\" />
   </ItemGroup>
 

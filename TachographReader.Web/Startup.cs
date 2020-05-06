@@ -68,6 +68,7 @@ namespace TachographReader.Web
             services.AddScoped<IDriverCarReportService, DriverCarReportService>();
             services.AddMediatR(typeof(Startup));
             services.AddSignalR();
+            services.AddMemoryCache();
             services
                 .AddMvc()
                 .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix);
@@ -86,11 +87,13 @@ namespace TachographReader.Web
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthorization();
-           app.UseRequestLocalization();
+            app.UseRequestLocalization();
+            //app.UseSession();
             // app.UseMvc();
             app.UseEndpoints(endpoints =>
             {
@@ -99,10 +102,11 @@ namespace TachographReader.Web
                     pattern: "{culture=en-US}/{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapHub<SocialDataHub>("/socialDataHub");
             });
-            
+
             SeedInitialData(app);
-            
+
         }
+
         private static void SeedInitialData(IApplicationBuilder app)
         {
             using (var scope = app.ApplicationServices.CreateScope())

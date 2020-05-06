@@ -97,14 +97,12 @@ namespace TachographReader.Application.Services
                 report.DailyActivities.Add(dayActivity);
             }
 
-            var firstItem = dailyActivities.FirstOrDefault();
+            var firstItem = dailyActivities.FirstOrDefault(x=>!string.IsNullOrEmpty(x.Name));
             if (firstItem != null)
-            {
-                report.StartPeriod = firstItem.Date;
                 report.FullName = firstItem.Name;
-            }
+            report.StartPeriod = startPeriod;
+            report.EndPeriod = endPeriod;
             await mediator.Publish(new ProgressNotification { Value = 80 }).ConfigureAwait(false);
-
             CalculateCumulServices(report);
             await mediator.Publish(new ProgressNotification { Value = 100 }).ConfigureAwait(false);
 
@@ -151,6 +149,9 @@ namespace TachographReader.Application.Services
                 case DriverActivityType.Available:
                     report.TotalAvailability += activity.EndUtc - activity.StartUtc;
                     report.TotalService += activity.EndUtc - activity.StartUtc;
+                    break;
+                case DriverActivityType.Break:
+                    report.TotalBreakRest += activity.EndUtc - activity.StartUtc;
                     break;
             }
             // before 6H
