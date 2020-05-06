@@ -11,5 +11,10 @@ namespace TachographReader.Application.Queries
         Task<List<Driver>> GetDriversAsync(Guid customerId);
         Task<DatatablesQueryModel<LegalFilesQueryViewModel>> GetLegalFilesAsync(Guid customerId ,string term , int start, int length);
         Task<int> GetLegalFilesCountAsync(Guid customerId);
+
+        public Task<DatatablesQueryModel<DriverQueryViewModel>> GetLisOfDriversAsync(Guid customerId, string term,
+            int start, int length);
+
+
     }
 }

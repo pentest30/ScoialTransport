@@ -123,6 +123,9 @@
   <data name="BreakRest" xml:space="preserve">
     <value>Rest</value>
   </data>
+  <data name="CardNumber" xml:space="preserve">
+    <value>Card number</value>
+  </data>
   <data name="Drive" xml:space="preserve">
     <value>Drive</value>
   </data>
@@ -135,17 +138,29 @@
   <data name="Duration" xml:space="preserve">
     <value>Duration</value>
   </data>
+  <data name="ExpiryDate" xml:space="preserve">
+    <value>Date of expiration</value>
+  </data>
   <data name="FileName" xml:space="preserve">
     <value>File name</value>
   </data>
+  <data name="FullName" xml:space="preserve">
+    <value>Full name</value>
+  </data>
   <data name="Hour" xml:space="preserve">
     <value>Hour</value>
+  </data>
+  <data name="LasDownloadDate" xml:space="preserve">
+    <value>Last download</value>
   </data>
   <data name="LegalFiles" xml:space="preserve">
     <value>Legal files</value>
   </data>
   <data name="Minute" xml:space="preserve">
     <value>Minute</value>
+  </data>
+  <data name="RegistrationNumber" xml:space="preserve">
+    <value>License number</value>
   </data>
   <data name="SaveFile" xml:space="preserve">
     <value>Save files</value>

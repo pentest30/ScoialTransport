@@ -1,11 +1,12 @@
 ﻿
 @using DataTables.AspNetCore.Mvc
+@using TachographReader.Application.Dtos
 @using TachographReader.Web.Models
 
 
 <aside class="right-side">
 <section class="content-header">
-    <h1 localize-content>@_loc.GetLocalizedHtmlString("ListOfVolunteers").Value</h1>
+    <h1 localize-content>@_loc.GetLocalizedHtmlString("List of drivers").Value</h1>
 
 </section>
 <section class="content">
@@ -13,10 +14,7 @@
    
         <div class="row">
             <div class="col-xs-12">
-                <a href="@Url.Action("Create")" class="btn btn-small btn-primary">@_loc.GetLocalizedHtmlString("Add new volunteer").Value <i class="fa fa-plus"></i></a>
-
-                <button onclick="modJs.showFilters();return false;" class="btn btn-small btn-primary">@_loc.GetLocalizedHtmlString("Filter").Value <i class="fa fa-filter"></i></button>&nbsp;&nbsp;<button id="Employee_resetFilters" onclick="modJs.resetFilters();return false;" class="btn btn-small btn-default" style="display: none;">Reset Filters <i class="fa fa-times"></i></button>
-                <a onclick="getExcel(); return false;" class="btn btn-small btn-primary">@_loc.GetLocalizedHtmlString("Upload file").Value <i class="fa fa-upload"></i></a>
+                 <a onclick="getExcel(); return false;" class="btn btn-small btn-primary">@_loc.GetLocalizedHtmlString("Export excel").Value <i class="fa fa-file"></i></a>
 
             </div>
             <div class="box-body table-responsive" style="margin-top:30px">
@@ -28,11 +26,13 @@
                             .Name("example").RowId("id").ClassName("table table-bordered dataTable")
                             .Columns(cols =>
                             {
-                                cols.Add(c => c.FirstName).Data("firstName").Title(_loc.GetLocalizedHtmlString("FirstName").Value);
-                                cols.Add(c => c.LastName).Data("lastName").Title(_loc.GetLocalizedHtmlString("LastName").Value);
+                                cols.Add(c => c.FullName).Data("fullName").Title(_loc.GetLocalizedHtmlString("FullName").Value);
                                 cols.Add(c => c.DrivingLicenseNumber).Data("drivingLicenseNumber").Title(_loc.GetLocalizedHtmlString("RegistrationNumber").Value);
                                 cols.Add(c => c.Phone).Data("phone").Title(_loc.GetLocalizedHtmlString("Phone").Value);
-                                cols.Add(c => c.CardNumber).Data("cardNumber").Title(_loc.GetLocalizedHtmlString("CardId").Value);
+                                cols.Add(c => c.CardNumber).Data("cardNumber").Title(_loc.GetLocalizedHtmlString("CardNumber").Value);
+                                cols.Add(c => c.ExpiryDate).Data("expiryDate").Title(_loc.GetLocalizedHtmlString("ExpiryDate").Value);
+                                cols.Add(c => c.LastDownloadDate).Data("lastDownloadDate").Title(_loc.GetLocalizedHtmlString("LastDownloadDate").Value);
+
                                 cols.Add(c => c.Id).Data("id").Render(() => "onRender").Click("onClick"); ; //.Click("onClick");
                             })
                             .ServerSide(true)
