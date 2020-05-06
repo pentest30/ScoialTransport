@@ -20,7 +20,7 @@ using TachoReader.Data.Data;
 
 namespace TachographReader.Application.Handlers
 {
-    public class CardDriverFileHandler : AsyncRequestHandler<AddDDDFileCommand>
+    public class DriverCardFileHandler : AsyncRequestHandler<AddDDDFileCommand>
     {
         protected override Task Handle(AddDDDFileCommand notification, CancellationToken cancellationToken)
         {
