@@ -1,0 +1,49 @@
+﻿@using DataTables.AspNetCore.Mvc
+@using TachographReader.Web.Models
+<div class="box-body table-responsive" style="margin-top:0">
+
+    <div class="row ">
+        <div style="margin: 20px" >
+
+            @(Html.Ext().Grid<DriverDailyActivityVViewModel>()
+                .Name("socialData").RowId("id").ClassName("table table-bordered dataTable")
+                .Columns(cols =>
+                {
+                    cols.Add(c => c.Date).Data("date").Title(_loc.GetLocalizedHtmlString("Date").Value);
+                    cols.Add(c => c.TotalService).Data("totalService").Title(_loc.GetLocalizedHtmlString("Total service").Value);
+                    cols.Add(c => c.TotalDrive).Data("totalDrive").Title(_loc.GetLocalizedHtmlString("Total drive").Value);
+                    cols.Add(c => c.TotalWork).Data("totalWork").Title(_loc.GetLocalizedHtmlString("Total work").Value);
+                    cols.Add(c => c.TotalAvailability).Data("totalAvailability").Title(_loc.GetLocalizedHtmlString("Total availability").Value);
+                    cols.Add(c => c.TotalNightHour).Data("totalNightHour").Title(_loc.GetLocalizedHtmlString("Total night hours").Value);
+                    cols.Add(c => c.TotalBreakRest).Data("totalBreakRest").Title(_loc.GetLocalizedHtmlString("Total rest").Value);
+                    cols.Add(c => c.TotalDistance).Data("totalDistance").Title(_loc.GetLocalizedHtmlString("Total distance").Value);
+
+                    cols.Add(c => c.Activities).Data("activities").Render(() => "renderActivities").Title(_loc.GetLocalizedHtmlString("Activities").Value);
+
+
+                })
+                .ServerSide(false)
+                .Searching(false)
+                .Paging(true)
+                )
+        </div>
+    </div>
+</div>
+<partial name="_TachoModal"/>
+<script>
+    function renderActivities(data, type, row, meta) {
+        return ' <a type="button" onClick="onActClick(this)"  data-type="remove" class="btn btn-sm btn-default" ><i class="fa fa-lg fa-fw fa-bar-chart-o"></i></a>'
+            ;
+       // return  'nik mok'
+    }
+    function onActClick(tr) {
+        var row = $("#socialData").DataTable().row($(tr).parents('tr'));
+        var currentItem = row.data();
+        $("#tachograph-content").html("");
+        initData(currentItem.activities, "tachograph-content", 95);
+        $("#modal-tacho-tile").html("@_loc.GetLocalizedHtmlString("Time line Activities of") "+moment(currentItem.date).format("DD-MM-YYYY"))
+        $("#tacho-modal").modal("show");
+        //console.log(currentItem);
+    }
+
+  </script>

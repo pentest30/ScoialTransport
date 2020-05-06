@@ -1,0 +1,92 @@
+﻿
+@using DataTables.AspNetCore.Mvc
+@using TachographReader.Web.Models
+
+
+<aside class="right-side">
+<section class="content-header">
+    <h1 localize-content>@_loc.GetLocalizedHtmlString("ListOfVolunteers").Value</h1>
+
+</section>
+<section class="content">
+<div class="span9">
+   
+        <div class="row">
+            <div class="col-xs-12">
+                <a href="@Url.Action("Create")" class="btn btn-small btn-primary">@_loc.GetLocalizedHtmlString("Add new volunteer").Value <i class="fa fa-plus"></i></a>
+
+                <button onclick="modJs.showFilters();return false;" class="btn btn-small btn-primary">@_loc.GetLocalizedHtmlString("Filter").Value <i class="fa fa-filter"></i></button>&nbsp;&nbsp;<button id="Employee_resetFilters" onclick="modJs.resetFilters();return false;" class="btn btn-small btn-default" style="display: none;">Reset Filters <i class="fa fa-times"></i></button>
+                <a onclick="getExcel(); return false;" class="btn btn-small btn-primary">@_loc.GetLocalizedHtmlString("Upload file").Value <i class="fa fa-upload"></i></a>
+
+            </div>
+            <div class="box-body table-responsive" style="margin-top:30px">
+
+                <div class="row ">
+                    <div style="margin: 20px">
+
+                        @(Html.Ext().Grid<DriverQueryViewModel>()
+                            .Name("example").RowId("id").ClassName("table table-bordered dataTable")
+                            .Columns(cols =>
+                            {
+                                cols.Add(c => c.FirstName).Data("firstName").Title(_loc.GetLocalizedHtmlString("FirstName").Value);
+                                cols.Add(c => c.LastName).Data("lastName").Title(_loc.GetLocalizedHtmlString("LastName").Value);
+                                cols.Add(c => c.DrivingLicenseNumber).Data("drivingLicenseNumber").Title(_loc.GetLocalizedHtmlString("RegistrationNumber").Value);
+                                cols.Add(c => c.Phone).Data("phone").Title(_loc.GetLocalizedHtmlString("Phone").Value);
+                                cols.Add(c => c.CardNumber).Data("cardNumber").Title(_loc.GetLocalizedHtmlString("CardId").Value);
+                                cols.Add(c => c.Id).Data("id").Render(() => "onRender").Click("onClick"); ; //.Click("onClick");
+                            })
+                            .ServerSide(true)
+                            .LengthMenu(c =>
+                            {
+                                c.Add(new int[] { 10, 25, 50 });
+                                c.Add(-1, "All");
+                            })
+                            .DataSource(c =>
+                                c.Ajax().Url(Url.Action("GetList", "Driver")).Method("GET").DataSrc("data")
+                            ))
+                    </div>
+                </div>
+            </div>
+
+        </div>
+</div>
+</section>
+</aside>
+<script>
+    $(documen).ready(function() {
+        $("#driver-tree").addClass("active");
+    })
+    function getExcel() {
+        window.location = "./Volunteers/ExportExcel" ;
+    }
+    var currentId;
+    var currentRow;
+    function onRender(data, type, row, meta) {
+        console.log(row);
+
+        // <!--Trigger the modal with a button -- >
+        // <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>
+        return '<a type="button" data-type="view" data-toggle="tooltip" title="@_loc.GetLocalizedHtmlString("EditPersonalInfo")" class="btn btn-sm btn-default" href="@Url.Action("Edit","Volunteers")/?id=' + row.id + '"><i class="fa fa-lg fa-fw fa-user"></i></a>' +
+                '<a type="button" data-type="view" data-toggle="tooltip" title="@_loc.GetLocalizedHtmlString("EditJob")" class="btn btn-sm btn-default" href="@Url.Action("UpdateAdditionalInfo","Volunteers")/?id=' + row.id + '"><i class="fa fa-lg fa-fw fa-edit"></i></a>' +
+                ' <a type="button" onClick="onClick(this)"  data-type="remove" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#confirm-delete"><i class="fa fa-lg fa-fw fa-trash-o"></i></a>'
+            ;
+    }
+    function onClick(el) {
+        var id = jQuery(el).closest('tr').attr('id');
+        console.log(id);
+        currentId = id;
+
+    }
+    function onDelete() {
+        $("#confirm-delete").modal("hide");
+        $.ajax({
+            url: '@Url.Action("Delete")/?id=' + currentId,
+            type: 'post',
+            success: function (result) {
+                // Do something with the result
+                var table = $('#example').DataTable();
+                table.ajax.reload();
+            }
+        });
+    }
+</script>

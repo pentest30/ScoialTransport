@@ -1,0 +1,56 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29911.84
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TachographReaderLib", "src\TachographReaderLib.csproj", "{5A2FCA46-264F-4840-88C2-797515DD1CD0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TachographReader.Resources", "TachographReader.Resources\TachographReader.Resources.csproj", "{84903626-B117-4E6F-B3BA-5C960903F14A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TachographReader.Data", "TachographReader.Data\TachographReader.Data.csproj", "{3587BAFE-DA6A-4FA2-A85B-AC302F95D5C5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TacchographReader.Core", "TacchographReader.Core\TacchographReader.Core.csproj", "{08AA631B-1DAC-4B5D-B68E-C669DB5943D0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TachographReader.Application", "TacchographReader.Application\TachographReader.Application.csproj", "{2CDB9007-43BB-488E-84F7-2A54ED38C2EA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TachographReader.Web", "TachographReader.Web\TachographReader.Web.csproj", "{97590008-9423-4AEE-B87B-1238BAB630D6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5A2FCA46-264F-4840-88C2-797515DD1CD0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A2FCA46-264F-4840-88C2-797515DD1CD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A2FCA46-264F-4840-88C2-797515DD1CD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A2FCA46-264F-4840-88C2-797515DD1CD0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84903626-B117-4E6F-B3BA-5C960903F14A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84903626-B117-4E6F-B3BA-5C960903F14A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84903626-B117-4E6F-B3BA-5C960903F14A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84903626-B117-4E6F-B3BA-5C960903F14A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3587BAFE-DA6A-4FA2-A85B-AC302F95D5C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3587BAFE-DA6A-4FA2-A85B-AC302F95D5C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3587BAFE-DA6A-4FA2-A85B-AC302F95D5C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3587BAFE-DA6A-4FA2-A85B-AC302F95D5C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08AA631B-1DAC-4B5D-B68E-C669DB5943D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08AA631B-1DAC-4B5D-B68E-C669DB5943D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08AA631B-1DAC-4B5D-B68E-C669DB5943D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08AA631B-1DAC-4B5D-B68E-C669DB5943D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2CDB9007-43BB-488E-84F7-2A54ED38C2EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2CDB9007-43BB-488E-84F7-2A54ED38C2EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2CDB9007-43BB-488E-84F7-2A54ED38C2EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2CDB9007-43BB-488E-84F7-2A54ED38C2EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97590008-9423-4AEE-B87B-1238BAB630D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97590008-9423-4AEE-B87B-1238BAB630D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97590008-9423-4AEE-B87B-1238BAB630D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97590008-9423-4AEE-B87B-1238BAB630D6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4F90B03B-1743-429F-8BEA-B5A469D00A32}
+		RESX_ConfirmAddLanguageFile = False
+	EndGlobalSection
+EndGlobal

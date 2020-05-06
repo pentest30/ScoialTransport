@@ -1,0 +1,98 @@
+﻿
+<aside class="left-side sidebar-offcanvas" style="min-height: 558px;">
+    <!-- sidebar: style can be found in sidebar.less -->
+    <section class="sidebar">
+        <!-- Sidebar user panel -->
+
+
+        <ul class="sidebar-menu">
+
+
+
+            <li class="treeview" ref="admin_Admin">
+                <a href="#">
+                    <i class="fa  fa-desktop"></i> <span>Admin</span>
+                    <i class="fa fa-angle-left pull-right"></i>
+                </a>
+
+                <ul class="treeview-menu" id="admin_Admin">
+                    <li>
+                        <a data-turbolinks="true" href="#" style="margin-left: 10px;">
+                            <i class="fa fa-desktop"></i> Dashboard
+                        </a>
+                    </li>
+                    @if (User.IsInRole("admin"))
+                    {
+                        <li>
+                            <a data-turbolinks="true" href="@Url.Action("Index","Account")" style="margin-left: 10px;">
+                                <i class="fa fa-user"></i> @_loc.GetLocalizedHtmlString("ListOfUsers").Value
+                            </a>
+                        </li>
+                    }
+
+
+                </ul>
+
+            </li>
+            <li class="treeview" ref="admin_Admin">
+                <a href="#">
+                    <i class="fa fa-wrench"></i> <span>Drivers</span>
+                    <i class="fa fa-angle-left pull-right"></i>
+                </a>
+
+                <ul class="treeview-menu " id="driver-tree">
+
+
+                    <li>
+                        <a data-turbolinks="true" class="hook"  href="@Url.Action("Index", "Driver")" style="margin-left: 10px;">
+                            <i class="fa fa-user"></i> Drivers
+                        </a>
+                    </li>
+                <li>
+                <a data-turbolinks="true" class="hook"  href="@Url.Action("Index", "LegalFiles")" style="margin-left: 10px;">
+                    <i class="fa fa-file"></i> Legal files
+                </a>
+            </li>
+
+
+                </ul>
+
+            </li>
+
+            <li class="treeview" ref="admin_Admin">
+                <a href="#">
+                    <i class="fa fa-clipboard"></i> <span>Social data</span>
+                    <i class="fa fa-angle-left pull-right"></i>
+                </a>
+
+                <ul class="treeview-menu " id="driver-tree">
+
+
+                    <li>
+                        <a data-turbolinks="true" class="hook"  href="@Url.Action("Index", "SocialData")" style="margin-left: 10px;">
+                            <i class="fa fa-user"></i> Social data
+                        </a>
+                    </li>
+                    <li>
+                        <a data-turbolinks="true" class="hook"  href="@Url.Action("Index", "LigalFiles")" style="margin-left: 10px;">
+                            <i class="fa fa-file"></i> Legal files
+                        </a>
+                    </li>
+
+
+                </ul>
+
+            </li>
+            <li>
+                <div class="user-panel">
+                    <div class="info">
+                        <p></p>
+                    </div>
+                </div>
+            </li>
+
+
+        </ul>
+    </section>
+    <!-- /.sidebar -->
+</aside>

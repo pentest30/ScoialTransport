@@ -1,0 +1,72 @@
+﻿
+
+<div id="upload-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">@_loc.GetLocalizedHtmlString("Upload new file").Value</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <form id="form" name="form" action="/uploader" enctype="multipart/form-data" method="post">
+                            <div class="buttons">
+                                <div class="upload-button">
+                                    <div class="label">@_loc.GetLocalizedHtmlString("UploadFile").Value</div>
+                                    <input id="files" name="files" type="file" size="1" multiple />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-md-6">
+                        <div id="loader" style="display: none; text-align: center"></div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" onclick="uploadFiles('files')">@_loc.GetLocalizedHtmlString("SaveFile").Value</button>
+
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+            </div>
+        </div>
+        
+    </div>
+</div>
+<script>
+    function uploadFiles(inputId) {
+        document.getElementById("loader").style.display = "block";
+        var input = document.getElementById(inputId);
+        var files = input.files;
+        var formData = new FormData();
+
+        for (var i = 0; i != files.length; i++) {
+            formData.append("files", files[i]);
+        }
+
+        $.ajax(
+            {
+                url: "@Url.Action("Uploader")",
+                data: formData,
+                processData: false,
+                contentType: false,
+                type: "POST",
+                success: function (data) {
+                    document.getElementById("loader").style.display = "none";
+                    $("#upload-modal").modal("hide");
+                    var table = $('#example').DataTable();
+                    table.ajax.reload();
+                },
+                error: function(data) {
+                    document.getElementById("loader").style.display = "none";
+                    $("#upload-modal").modal("hide");
+
+                }
+            }
+        );
+    }
+</script>

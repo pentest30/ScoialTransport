@@ -1,0 +1,185 @@
+﻿@using TachographReader.Web.Helpers
+@using TachographReader.Web.LocalizationResources
+
+<aside class="right-side">
+    <section class="content-header " style="background: aliceblue">
+        <div class="row">
+            <div class="col-xs-12">
+                <partial name="_SocialDataSearchBar" />
+            </div>
+        </div>
+    </section>
+    <section class="content">
+        <div class="span9">
+
+            <ul class="nav nav-tabs" id="modTab" style="margin-bottom:0px;margin-left:5px;border-bottom: none;">
+                <li class="active"><a id="tabEmployee" href="#tabPageEmployee" localize-content>@_loc.GetLocalizedHtmlString("Synthesis").Value</a></li>
+                <li><a id="tabDistricts" href="#tabPageDistrict" localize-content>@_loc.GetLocalizedHtmlString("Social data")</a></li>
+                <li><a id="tabFunctions" href="#tabPageFunction" localize-content>@_loc.GetLocalizedHtmlString("Indemnities")</a></li>
+
+
+            </ul>
+
+            <div class="tab-content">
+                <div class="tab-pane active" id="tabPageEmployee">
+                    <div id="Employee" class="reviewBlock" data-content="List" style="padding:15px;">
+                        <partial name="_Synthesis" />
+                    </div>
+
+
+                </div>
+                <div class="tab-pane" id="tabPageDistrict">
+                    <div id="social" class="reviewBlock" data-content="List" style="padding:15px;">
+                        <partial name="_SocialData" />
+                    </div>
+
+
+                </div>
+                <div class="tab-pane" id="tabPageFunction">
+                    <div id="districts" class="reviewBlock" data-content="List" style="padding:15px;">
+
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </section>
+</aside>
+<script src="~/js/timeLine.js"></script>
+
+@{
+    var JSONResx = ResourcesHelper.GenerateResxJSON<LocSource>();
+}
+<script>
+
+    var startPeriod = null;
+    var endPeriod = null;
+    var localization = null;
+    var currentPeriod = null;
+    $(document).ready(function () {
+        $("#driverId").select2();
+        $("#period-choice").select2();
+        $("#start_datetime").datetimepicker({
+            format: 'yyyy-MM-dd hh:mm',
+            showMeridian: false
+        });
+        $("#end_datetime").datetimepicker({
+            format: 'yyyy-MM-dd hh:mm',
+            showMeridian: false
+        });
+
+        localization=@Html.Raw(JSONResx);
+        $(document).ready(function() {
+            $(".nav-tabs a").click(function(){
+                $(this).tab('show');
+            });
+        })
+        $("#period-choice").on("change", function() {
+
+            switch (this.value) {
+                case "CM":{
+                    const today = new Date();
+                    startPeriod = beginningOfMonth(today);
+                    endPeriod = endOfMonth(today);
+                    $("#start_datetime").hide();
+                    $("#end_datetime").hide();
+                    currentPeriod = null;
+                }
+                    break;
+                case "CW": {
+                   const week = getCurrentWeek();
+                    startPeriod = week.first;
+                    endPeriod = week.last;
+                   $("#start_datetime").hide();
+                    $("#end_datetime").hide();
+                    currentPeriod = null;
+                }
+                    break;
+                case "LM": {
+                    const d = getLastMonthDate();
+                    startPeriod = beginningOfMonth(d);
+                    endPeriod = endOfMonth(d);
+                    $("#start_datetime").hide();
+                    $("#end_datetime").hide();
+                    currentPeriod = null;
+                    }
+                    break;
+                case "LW": {
+                    const lw = getLastWeek();
+                    startPeriod = lw.first;
+                    endPeriod = lw.last;
+                    $("#start_datetime").hide();
+                    $("#end_datetime").hide();
+                    currentPeriod = null;
+                    }
+                    break;
+                case "P":
+                    {
+                        $("#start_datetime").show();
+                        $("#end_datetime").show();
+                        currentPeriod = "P";
+                    }
+                    break;
+            default:
+            }
+
+        });
+    });
+    function getData() {
+        var e = document.getElementById("driverId");
+        var driverId = e.options[e.selectedIndex].value;
+        if (!isGuid(driverId)) return;
+        setTimeout(function () {
+            $(".progress-bar").css('width', 10 + '%').attr('aria-valuenow', 10); 
+        }, 100);
+       $("#progress-modal").modal("show");
+        if (currentPeriod == "P") {
+            console.log($("#start-period").val());
+            var s = moment($("#start-period").val()).format("YYYY-MM-DD HH:mm");
+            var ep = moment($("#end-period").val()).format("YYYY-MM-DD HH:mm");
+            startPeriod = moment(s).toDate();
+            endPeriod = moment(ep).toDate();
+
+        }
+        $.ajax({
+            url: '@Url.Action("GetSocialDataReport", "SocialData")',
+            type: 'POST',
+            data: { "driverId": driverId, "startPeriod": (startPeriod).toISOString(), "endPeriod": (endPeriod).toISOString(), type:null},
+            success: successLoadData,
+            error: function (error) { console.log(error); }
+        });
+    }
+
+    function successLoadData(data) {
+        const totalServices = data.totalService;
+        $("#social-tbl > tbody").html("");
+        if (totalServices) {
+            $('#social-tbl').append('<tr><td> @_loc.GetLocalizedHtmlString("Service").Value</td><td id="cumul-service">' +
+                totalServices.totalService +
+                '</td></tr>');
+            $('#social-tbl').append('<tr><td> @_loc.GetLocalizedHtmlString("Availability").Value</td><td id="cumul-avail">' +
+                totalServices.totalAvailability +
+                '</td></tr>');
+            $('#social-tbl').append('<tr><td> @_loc.GetLocalizedHtmlString("Work").Value</td><td id="cumul-work">' +
+                totalServices.totalWork +
+                '</td></tr>');
+            $('#social-tbl').append('<tr><td> @_loc.GetLocalizedHtmlString("Drive").Value</td><td id="cumul-drive">' +
+                totalServices.totalDrive +
+                '</td></tr>');
+            $('#social-tbl').append('<tr><td> @_loc.GetLocalizedHtmlString("Night hours").Value</td><td id="cumul-night">' +
+                totalServices.totalNightHour +
+                '</td></tr>');
+
+        }
+        $("#summary-title").html('@_loc.GetLocalizedHtmlString("Activity report") @_loc.GetLocalizedHtmlString("from").Value '+ moment(startPeriod).format("DD-MM-YYYY") + ' @_loc.GetLocalizedHtmlString("to").Value' +" " + moment(endPeriod).format("DD-MM-YYYY"))
+        initChart(totalServices);
+        //console.log(data);
+        var table = $("#socialData").DataTable();
+        table.clear().draw();
+        data.dailyActivities.forEach(i => {
+            table.row.add((i)).draw();
+        });
+        $("#progress-modal").modal("hide");
+    }
+</script>

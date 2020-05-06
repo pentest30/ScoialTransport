@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <OutputPath>bin\Debug\</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="8.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="1.1.0" />
+  </ItemGroup>
+
+  
+  <ItemGroup>
+    <Folder Include="Commands\" />
+    <Folder Include="Dtos\Customer\Company\" />
+  </ItemGroup>
+
+  
+  <ItemGroup>
+    <ProjectReference Include="..\src\TachographReaderLib.csproj" />
+    <ProjectReference Include="..\TacchographReader.Core\TacchographReader.Core.csproj" />
+    <ProjectReference Include="..\TachographReader.Data\TachographReader.Data.csproj" />
+    <ProjectReference Include="..\TachographReader.Resources\TachographReader.Resources.csproj" />
+  </ItemGroup>
+
+</Project>

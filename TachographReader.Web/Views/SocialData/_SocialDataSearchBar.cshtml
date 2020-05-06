@@ -1,0 +1,37 @@
+﻿
+<form class="form-inline">
+    <select style="width: 300px" id="driverId" name="DriverId"
+            asp-items="@ViewData["drivers"] as SelectList">
+        <option>@_loc.GetLocalizedHtmlString("Please select driver").Value</option>
+    </select>
+    <select style="width: 200px" id="period-choice">
+        <option value="">@_loc.GetLocalizedHtmlString("Please select period").Value</option><option value="CM">@_loc.GetLocalizedHtmlString("Current month").Value</option>
+        <option value="CW">@_loc.GetLocalizedHtmlString("Current week").Value</option>
+        <option value="LM">@_loc.GetLocalizedHtmlString("Last month").Value</option>
+        <option value="LW">@_loc.GetLocalizedHtmlString("Last week").Value</option>
+
+        <option value="P">@_loc.GetLocalizedHtmlString("Period").Value</option>
+    </select>
+    <div class="form-group">
+        <div style="width: 200px; display: none" class="input-group input-append date datetimefield" id="start_datetime"  data-date="" data-date-format="yyyy-MM-dd">
+            <span class="add-on input-group-addon">
+                <i class="fa fa-calendar"></i>
+            </span>
+            <input  class="datetimeInput form-control" type="text" id="start-period" size="16" value="" datetimemask="true" placeholder="YYYY-MM-DD hh:mm:ss">
+
+        </div>
+    </div>
+    <div class="form-group">
+        <div style="width: 200px;display: none" class="input-group input-append date datetimefield" id="end_datetime"  data-date="" data-date-format="yyyy-MM-dd">
+            <span class="add-on input-group-addon">
+                <i class="fa fa-calendar"></i>
+            </span>
+            <input  class="datetimeInput form-control" type="text" id="end-period"  size="16" value="" datetimemask="true" placeholder="YYYY-MM-DD hh:mm:ss">
+
+        </div>
+    </div>
+
+    <a onclick="getData();return false;" class="btn btn-small btn-primary">@_loc.GetLocalizedHtmlString("download").Value <i class="fa fa-download"></i></a>
+    
+</form>
+<partial name="_ProgressPopup"/>

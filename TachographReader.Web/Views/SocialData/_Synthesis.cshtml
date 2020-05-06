@@ -1,0 +1,103 @@
+﻿<div class="container">
+
+    <h4 id="summary-title">@_loc.GetLocalizedHtmlString("Activity report").Value</h4>
+    <div class="row">
+        <div class="col-md-6">
+            <table style="width: 90%; font-size: 14px;margin-left: -1px"  class="table table-bordered " id="social-tbl" align="center">
+                <thead style="background-color: #e3e4e6">
+                <tr>
+                    <th>@_loc.GetLocalizedHtmlString("Cumuls").Value</th>
+                    <th>@_loc.GetLocalizedHtmlString("Hours").Value</th>
+                </tr>
+                </thead>
+                <tbody>
+                            
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-6"  style="margin-top: -20px">
+            <div  id="container3" style="text-align: center; position: fixed;   height: 190px;width: 40%"></div>
+        </div>
+    </div>
+</div>
+<script>
+
+    function initChart(d) {
+        var highcharts = $('#container3').highcharts();
+        if (highcharts != undefined) {
+            var seriesLength = highcharts.series.length;
+            for (var i = seriesLength - 1; i > -1; i--) {
+                highcharts.series[i].remove();
+            }
+        }
+        if (d == null) return;
+        const totalService = parseServiceTime(d.totalService);
+        if (totalService == 0) return;
+        const totalAvailability = parseServiceTime(d.totalAvailability);
+        const totalWork = parseServiceTime(d.totalWork);
+        const totalDrive = parseServiceTime(d.totalDrive);
+        const avVal = parseFloat((totalAvailability * 100 / totalService).toFixed(2));
+        const workVal = parseFloat((totalWork * 100 / totalService).toFixed(2));
+        const drvVal = parseFloat((totalDrive * 100 / totalService).toFixed(2));
+        var colors = [];
+        var data = [];
+        var innerSize = 0;
+        if (totalAvailability < 0.05) {
+            innerSize = 120;
+            colors = ['#dab30a', '#048b9a'];
+            data = [
+                { name: '@_loc.GetLocalizedHtmlString("Work").Value', y: workVal },
+                { name: '@_loc.GetLocalizedHtmlString("Drive").Value', y: drvVal }
+            ]
+        } else {
+            innerSize = 120;
+            colors = ['green', '#dab30a', '#048b9a'];
+            data = [
+                { name: '@_loc.GetLocalizedHtmlString("Availability").Value', y: avVal },
+                { name: '@_loc.GetLocalizedHtmlString("Work").Value', y: workVal },
+                { name: '@_loc.GetLocalizedHtmlString("Drive").Value', y: drvVal }
+            ];
+
+        }
+        $('#container3').highcharts({
+            chart: {
+                type: 'pie'
+            },
+            colors: colors,
+            title: {
+                text: '@_loc.GetLocalizedHtmlString("Repartition of service")'
+            },
+            tooltip: {
+                enabled: true,
+                pointFormat: '<b>{point.percentage:.1f}% </b>'
+
+            },
+            plotOptions: {
+                pie: {
+                    innerSize: innerSize,
+                    depth: 45,
+                    allowPointSelect: true
+                }
+            },
+            credits: {
+                enabled: false
+            },
+            exporting: { enabled: false },
+
+            series: [
+                {
+                    data: data
+                }
+            ]
+        });
+
+    }
+    
+    function parseServiceTime(value) {
+        try {
+            return parseFloat(value.replace('H', '.'));
+        } catch (ex) {
+            console.error(ex);
+        }
+    }
+</script>

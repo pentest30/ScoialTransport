@@ -1,0 +1,91 @@
+﻿
+@using DataTables.AspNetCore.Mvc
+@using TachographReader.Application.Dtos
+@using TachographReader.Web.Models
+
+
+<aside class="right-side">
+    <section class="content-header">
+        <h1 localize-content>@_loc.GetLocalizedHtmlString("LegalFiles").Value</h1>
+
+    </section>
+    <section class="content">
+        <div class="span9">
+
+            <div class="row">
+                <div class="col-xs-12">
+
+                    <a onclick="getUpload();return false;" class="btn btn-small btn-primary">@_loc.GetLocalizedHtmlString("Upload file").Value <i class="fa fa-upload"></i></a>
+
+                </div>
+                <div class="box-body table-responsive" style="margin-top:30px">
+
+                    <div class="row ">
+                        <div style="margin: 20px">
+
+                            @(Html.Ext().Grid<LegalFilesQueryViewModel>()
+                                .Name("example").RowId("id").ClassName("table table-bordered dataTable")
+                                .Columns(cols =>
+                                {
+                                    cols.Add(c => c.Driver).Data("driver").Title(_loc.GetLocalizedHtmlString("DriverName").Value);
+                                    cols.Add(c => c.FileName).Data("fileName").Title(_loc.GetLocalizedHtmlString("FileName").Value);
+
+                                    cols.Add(c => c.GenerationDateUtc).Data("generationDateUtc").Title(_loc.GetLocalizedHtmlString("Date").Value);
+                                    cols.Add(c => c.Id).Data("id").Render(() => "onRender").Click("onClick").Width("100"); ; //.Click("onClick");
+                                })
+                                .ServerSide(true)
+                                .LengthMenu(c =>
+                                {
+                                    c.Add(new int[] { 10, 25, 50 });
+                                    c.Add(-1, "All");
+                                })
+                                .DataSource(c =>
+                                    c.Ajax().Url(Url.Action("GetList", "LegalFiles")).Method("GET").DataSrc("data")
+                                ))
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+</aside>
+<partial name="_UploadFile"/>
+<script>
+    $(document).ready(function () {
+       
+        $("#example").dataTable().rowGrouping({iGroupingColumnIndex:0});
+    })
+    function getUpload() {
+        $("#upload-modal").modal("show");
+    }
+    var currentId;
+    var currentRow;
+    function onRender(data, type, row, meta) {
+        console.log(row);
+
+        // <!--Trigger the modal with a button -- >
+        // <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>
+        return '<a type="button" data-type="view" data-toggle="tooltip" title="@_loc.GetLocalizedHtmlString("DoanloadFile")" class="btn btn-sm btn-default" href="@Url.Action("Edit","Volunteers")/?id=' + row.id + '"><i class="fa fa-lg fa-fw fa-download"></i></a>' +
+               ' <a type="button" onClick="onClick(this)"  data-type="remove" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#confirm-delete"><i class="fa fa-lg fa-fw fa-trash-o"></i></a>'
+            ;
+    }
+    function onClick(el) {
+        var id = jQuery(el).closest('tr').attr('id');
+        console.log(id);
+        currentId = id;
+
+    }
+    function onDelete() {
+        $("#confirm-delete").modal("hide");
+        $.ajax({
+            url: '@Url.Action("Delete")/?id=' + currentId,
+            type: 'post',
+            success: function (result) {
+                // Do something with the result
+                var table = $('#example').DataTable();
+                table.ajax.reload();
+            }
+        });
+    }
+</script>
