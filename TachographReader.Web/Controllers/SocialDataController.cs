@@ -40,8 +40,8 @@ namespace TachographReader.Web.Controllers
             var report = await driverCarReport.GetDriverCardReportFromByPeriodAsync(driverId, startPeriod, endPeriod)
                 .ConfigureAwait(false);
             var total = SummaryTotalService.GetTotalService(report);
-            var key1 = HttpContext.Connection.Id + "dailyServices";
-            var key2 = HttpContext.Connection.Id + "summaryServices";
+            var key1 =  "dailyServices";
+            var key2 =  "summaryServices";
             var dailyServices = report.DailyActivities.Select(x => new DriverDailyActivityVViewModel(x));
             if (memoryCache.Get(key1)!= null)
                 memoryCache.Remove(key1);
@@ -62,10 +62,17 @@ namespace TachographReader.Web.Controllers
                         Path.DirectorySeparatorChar + "reports" + Path.DirectorySeparatorChar + "TachyReportDriver.xlsx"),
                     FileMode.Open);
             var stream = new MemoryStream();
-            var key = HttpContext.Connection.Id + "dailyServices";
-            var key2 = HttpContext.Connection.Id + "summaryServices";
+            var key = "dailyServices";
+            var key2 = "summaryServices";
             var report = memoryCache.Get<DriverDailyActivityVViewModel[]>(key) ;
             var summaryTotalService = memoryCache.Get<SummaryTotalService>(key2) ;
+            if (report == null || summaryTotalService == null)
+            {
+                fs.Close();
+                 fs.DisposeAsync().GetAwaiter().GetResult();
+                 throw new NullReferenceException();
+
+            }
             using (ExcelPackage package = new ExcelPackage(stream, fs))
             {
                 ExcelWorksheet sl = package.Workbook.Worksheets["Hours"];
