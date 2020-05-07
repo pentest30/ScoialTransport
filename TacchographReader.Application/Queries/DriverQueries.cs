@@ -13,10 +13,8 @@ namespace TachographReader.Application.Queries
 {
     public class DriverQueries : BaseService, IDriverQueries
     {
-        public DriverQueries(ApplicationDbContext context) : base(context)
-        {
-        }
-
+        public DriverQueries(ApplicationDbContext context) : base(context) { }
+       
         public async Task<List<Driver>> GetDriversAsync(Guid customerId)
         {
             var drivers = await (from d in Context.Drivers
@@ -130,6 +128,7 @@ namespace TachographReader.Application.Queries
 
                 join identifier in Context.Identifiers on d.Id equals identifier.DriverId into identifiers
                 from idf in identifiers.DefaultIfEmpty()
+                
                 let lastDownloadDate = (from dailyAct in Context.CardActivityDailyRecords.DefaultIfEmpty()
                     orderby dailyAct.Date descending
                     where dailyAct.CardNumber == idf.CardNumber
@@ -146,7 +145,6 @@ namespace TachographReader.Application.Queries
                     BirthDate = q.BirthDate,
                     DrivingLicenseNumber = q.DriverNumber,
                     Id = q.Id
-                    
                 })
                 .ToListAsync()
                 .ConfigureAwait(false);
@@ -160,6 +158,11 @@ namespace TachographReader.Application.Queries
                 });
             }
             return result;
+        }
+
+        public async Task<Driver> GetDriverByIdAsync(Guid driverId)
+        {
+            return await Context.Drivers.FindAsync(driverId).ConfigureAwait(false);
         }
     }
 }

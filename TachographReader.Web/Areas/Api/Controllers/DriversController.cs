@@ -1,32 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using TachographReader.Application.Dtos.Driver;
 using TachographReader.Application.Queries;
+using TachographReader.Web.Models;
 
 namespace TachographReader.Web.Areas.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class DriverController : ControllerBase
+    public class DriversController : ControllerBase
     {
         private readonly IDriverQueries driverQueries;
+        private readonly IMediator mediator;
 
-        public DriverController(IDriverQueries driverQueries)
+        public DriversController(IDriverQueries driverQueries,IMediator mediator)
         {
             this.driverQueries = driverQueries;
+            this.mediator = mediator;
         }
 
-        // GET: api/Driver
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
-
+        
 
         [HttpGet("{customerId}", Name = "GetAll")]
         public Task<IEnumerable<DriverDto>> GetAll(string customerId)
@@ -35,21 +31,10 @@ namespace TachographReader.Web.Areas.Api.Controllers
         }
 
         // POST: api/Driver
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
 
-        // PUT: api/Driver/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public Task<IActionResult> Edit(AddOrUpdateDriveViewModel model)
         {
-        }
-
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            throw new NotImplementedException();
         }
     }
 }

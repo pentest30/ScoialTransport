@@ -1,0 +1,93 @@
+﻿@model TachographReader.Web.Models.AddOrUpdateDriveViewModel
+<aside class="right-side">
+    <section class="content-header">
+        <h1>
+            @_loc.GetLocalizedHtmlString("Edit driver").Value
+        </h1>
+
+    </section>
+    <section class="content">
+        <div class="span9">
+
+
+
+            <ul class="nav nav-tabs" id="modTabCreate" style="margin-bottom:0px;margin-left:5px;border-bottom: none;">
+                <li class="active"><a id="tabVolunteer" href="#tabCreateVolunteer">@_loc.GetLocalizedHtmlString("Personal info").Value</a></li>
+
+            </ul>
+
+            <div class="tab-content">
+                <div class="tab-pane active" id="tabCreateVolunteer">
+                    <form class="form-horizontal" method="post" action="@Url.Action("EditDriver", "Driver")">
+                        <div id="Employee" class="reviewBlock" data-content="Form" style="padding-left: 30px; background-color: white;">
+                            <input type="hidden" asp-for="Id" />
+                            <div class="row">
+                                <div class="form-group row">
+                                    <label for="text1" class="col-sm-3 control-label">@_loc.GetLocalizedHtmlString("FullName").Value <font class="redFont">*</font> </label>
+                                    <div class="controls col-sm-6">
+                                        <input style="text-transform:uppercase" asp-for="FullName" type="text" class="form-control">
+                                        <span asp-validation-for="FullName" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                
+                                <div class="form-group row">
+                                    <label class="col-sm-3 control-label">@_loc.GetLocalizedHtmlString("BirthDate").Value </label>
+                                    <div class="controls col-sm-6">
+                                        <input asp-for="BirthDate" id="BirthDate" type="text" class="form-control">
+                                        <span asp-validation-for="BirthDate" class="text-danger"></span>
+
+                                    </div>
+                                </div>
+                               
+                                <div class="form-group row">
+                                    <label class="col-sm-3 control-label">@_loc.GetLocalizedHtmlString("RegistrationNumber").Value </label>
+                                    <div class="controls col-sm-6">
+                                        <input asp-for="DrivingLicenseNumber" type="text" class="form-control">
+                                        <span asp-validation-for="DrivingLicenseNumber" class="text-danger"></span>
+
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group row">
+                                    <label class="col-sm-3 control-label">@_loc.GetLocalizedHtmlString("Phone").Value </label>
+                                    <div class="controls col-sm-6">
+                                        <input asp-for="Phone" type="text" class="form-control">
+                                        <span asp-validation-for="Phone" class="text-danger"></span>
+
+                                    </div>
+                                </div>
+                                
+
+                                    <div class="control-group row">
+                                        <div class="controls col-sm-9">
+                                            <button type="submit" class="saveBtn btn btn-primary pull-right"><i class="fa fa-save"></i> @_loc.GetLocalizedHtmlString("Save").Value</button>
+                                            <a href="@Url.Action("Index")" class="cancelBtn btn pull-right" style="margin-right:5px;"><i class="fa fa-times-circle-o"></i> @_loc.GetLocalizedHtmlString("Cancel").Value</a>
+                                        </div>
+                                        <div class="controls col-sm-3">
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                    
+                    </form>
+
+
+                </div>
+
+            </div>
+
+
+        </div>
+    </section>
+</aside>
+<script>
+    $(document).ready(function() {
+        $("#BirthDate").datepicker({
+            format: 'dd/mm/yyyy'
+        });
+       
+    })
+</script>

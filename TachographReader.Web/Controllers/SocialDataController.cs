@@ -21,7 +21,9 @@ namespace TachographReader.Web.Controllers
         private readonly IMemoryCache memoryCache;
 
         public SocialDataController(IDriverQueries driverService, 
-            IDriverCarReportService driverCarReport, IHostingEnvironment hostingEnvironment, IMemoryCache memoryCache)
+            IDriverCarReportService driverCarReport, 
+            IHostingEnvironment hostingEnvironment, 
+            IMemoryCache memoryCache)
         {
             this.driverService = driverService;
             this.driverCarReport = driverCarReport;
@@ -69,10 +71,10 @@ namespace TachographReader.Web.Controllers
             if (report == null || summaryTotalService == null)
             {
                 fs.Close();
-                 fs.DisposeAsync().GetAwaiter().GetResult();
-                 throw new NullReferenceException();
-
+                fs.DisposeAsync().GetAwaiter().GetResult();
+                throw new NullReferenceException();
             }
+
             using (ExcelPackage package = new ExcelPackage(stream, fs))
             {
                 ExcelWorksheet sl = package.Workbook.Worksheets["Hours"];

@@ -66,9 +66,8 @@
 
         // <!--Trigger the modal with a button -- >
         // <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>
-        return '<a type="button" data-type="view" data-toggle="tooltip" title="@_loc.GetLocalizedHtmlString("EditPersonalInfo")" class="btn btn-sm btn-default" href="@Url.Action("Edit","Volunteers")/?id=' + row.id + '"><i class="fa fa-lg fa-fw fa-user"></i></a>' +
-                '<a type="button" data-type="view" data-toggle="tooltip" title="@_loc.GetLocalizedHtmlString("EditJob")" class="btn btn-sm btn-default" href="@Url.Action("UpdateAdditionalInfo","Volunteers")/?id=' + row.id + '"><i class="fa fa-lg fa-fw fa-edit"></i></a>' +
-                ' <a type="button" onClick="onClick(this)"  data-type="remove" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#confirm-delete"><i class="fa fa-lg fa-fw fa-trash-o"></i></a>'
+        return '<a type="button" data-type="view" data-toggle="tooltip" title="@_loc.GetLocalizedHtmlString("Edit driver")" class="btn btn-sm btn-default" href="@Url.Action("Edit")/?id=' + row.id + '"><i class="fa fa-lg fa-fw fa-edit"></i></a>' +
+                 ' <a type="button" onClick="onClick(this)"  data-type="remove" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#confirm-delete"><i class="fa fa-lg fa-fw fa-trash-o"></i></a>'
             ;
     }
     function onClick(el) {

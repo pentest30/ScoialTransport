@@ -2,6 +2,7 @@ using System;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
+using AutoMapper;
 using LazZiya.ExpressLocalization;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -67,6 +68,7 @@ namespace TachographReader.Web
             services.AddScoped<IDriverQueries, DriverQueries>();
             services.AddScoped<IDriverCarReportService, DriverCarReportService>();
             services.AddMediatR(typeof(Startup));
+            services.AddAutoMapper(typeof(Startup));
             services.AddSignalR();
             services.AddMemoryCache();
             services
