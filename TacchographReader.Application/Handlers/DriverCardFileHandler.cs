@@ -161,7 +161,7 @@ namespace TachographReader.Application.Handlers
                     FileName = fileName,
                     GenerationDateUtc = generatedUtc,
                     DriverId = driver.Id,
-                    FileContent = FileHelper.Compress(fileBytes),
+                    FileContent =fileBytes,
                     CustomerId = driver.CustomerId
                 });
             }

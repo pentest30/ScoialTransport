@@ -4,3 +4,4 @@ data
 .vs/
 
 test.xml
+/TachographReader.Web/wwwroot/uploads
