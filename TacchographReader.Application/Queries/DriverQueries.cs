@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using tacchograaph_reader.Core.Entities;
+using tacchograaph_reader.Core.IO;
 using TachographReader.Application.Dtos;
 using TachographReader.Application.Dtos.Driver;
 using TachographReader.Application.Services;
@@ -163,6 +164,12 @@ namespace TachographReader.Application.Queries
         public async Task<Driver> GetDriverByIdAsync(Guid driverId)
         {
             return await Context.Drivers.FindAsync(driverId).ConfigureAwait(false);
+        }
+
+        public async Task<Tuple<byte[], string>> GetLegalFileContentAsync(Guid id)
+        {
+            var legalFile = await  Context.LegalFiles.FindAsync(id).ConfigureAwait(false);
+            return legalFile.FileContent[0] == 0x1F ? new Tuple<byte[], string>(FileHelper.Decompress(legalFile.FileContent), legalFile.FileName) : new Tuple<byte[], string>(legalFile.FileContent, legalFile.FileName);
         }
     }
 }

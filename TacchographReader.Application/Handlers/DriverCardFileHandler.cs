@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using tacchograaph_reader.Core.Commands.DddFiles;
 using tacchograaph_reader.Core.Entities;
+using tacchograaph_reader.Core.IO;
 using TachographReader.Application.helpers;
 using TachoReader.Data.Data;
 
@@ -160,7 +161,7 @@ namespace TachographReader.Application.Handlers
                     FileName = fileName,
                     GenerationDateUtc = generatedUtc,
                     DriverId = driver.Id,
-                    FileContent = fileBytes,
+                    FileContent = FileHelper.Compress(fileBytes),
                     CustomerId = driver.CustomerId
                 });
             }

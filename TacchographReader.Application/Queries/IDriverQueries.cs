@@ -18,6 +18,7 @@ namespace TachographReader.Application.Queries
 
         public Task<IEnumerable<DriverDto>> GetListOfDriversForApiAsync(Guid customerId);
         public Task<Driver> GetDriverByIdAsync(Guid driverId);
+        public Task<Tuple<byte[], string>> GetLegalFileContentAsync(Guid id);
 
     }
 }
