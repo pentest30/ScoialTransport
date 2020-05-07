@@ -77,3 +77,23 @@ function endOfMonth(d) {
     date.setSeconds(59);
     return (date);
 }
+function clearDataTablesGrouping() {
+    var oSettings = $('#socialData').dataTable().fnSettings();
+
+    for (var f = 0; f < oSettings.aoDrawCallback.length; f++) {
+        if (oSettings.aoDrawCallback[f].sName == 'fnRowGrouping') {
+            oSettings.aoDrawCallback.splice(f, 1);
+            break;
+        }
+    }
+
+    oSettings.aaSortingFixed = null;
+}
+function hideFirstColumn(hide) {
+    var table = $('#socialData').DataTable({
+        initComplete: function (settings) {
+            var api = new $.fn.dataTable.Api(settings);
+            api.columns([0]).visible(hide);
+        }
+    });
+}

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using tacchograaph_reader.Core.Entities;
 using TachographReader.Application.Dtos;
+using TachographReader.Application.Dtos.Driver;
 using TachographReader.Application.Services;
 using TachoReader.Data.Data;
 
@@ -120,6 +121,44 @@ namespace TachographReader.Application.Queries
                 RecordsFilterd = recordsFilterd
 
             };
+            return result;
+        }
+
+        public async Task<IEnumerable<DriverDto>> GetListOfDriversForApiAsync(Guid customerId)
+        {
+            var query =  (from d in Context.Drivers
+
+                join identifier in Context.Identifiers on d.Id equals identifier.DriverId into identifiers
+                from idf in identifiers.DefaultIfEmpty()
+                let lastDownloadDate = (from dailyAct in Context.CardActivityDailyRecords.DefaultIfEmpty()
+                    orderby dailyAct.Date descending
+                    where dailyAct.CardNumber == idf.CardNumber
+                    select dailyAct.Date).FirstOrDefault()
+
+                where d.CustomerId.Equals(customerId)
+                select new { d.Name, d.BirthDate, d.DriverNumber, d.Id, d.Tel, lastDownloadDate });
+            IEnumerable<DriverDto> result = await query
+                .Select(q => new DriverDto
+                {
+                    FullName = q.Name,
+                    Phone = q.Tel,
+                    LastDownloadDate = q.lastDownloadDate,
+                    BirthDate = q.BirthDate,
+                    DrivingLicenseNumber = q.DriverNumber,
+                    Id = q.Id
+                    
+                })
+                .ToListAsync()
+                .ConfigureAwait(false);
+            foreach (var q in result)
+            {
+                q.Identifiers = Context.Identifiers.Where(x => x.DriverId == q.Id).Select(id => new IdentifierDto()
+                {
+                    CardExpiryDate = id.CardExpiryDate,
+                    CardIssueDate = id.CardIssueDate,
+                    CardNumber = id.CardNumber
+                });
+            }
             return result;
         }
     }

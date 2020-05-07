@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using tacchograaph_reader.Core.Entities;
 using TachographReader.Application.Dtos;
+using TachographReader.Application.Dtos.Driver;
 
 namespace TachographReader.Application.Queries
 {
@@ -14,6 +15,8 @@ namespace TachographReader.Application.Queries
 
         public Task<DatatablesQueryModel<DriverQueryViewModel>> GetLisOfDriversAsync(Guid customerId, string term,
             int start, int length);
+
+        public Task<IEnumerable<DriverDto>> GetListOfDriversForApiAsync(Guid customerId);
 
 
     }

@@ -80,6 +80,7 @@ namespace TachographReader.Web
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseExceptionHandler("/error-local-development");
             }
             else
             {
@@ -97,6 +98,8 @@ namespace TachographReader.Web
             // app.UseMvc();
             app.UseEndpoints(endpoints =>
             {
+               
+
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{culture=en-US}/{controller=Home}/{action=Index}/{id?}");

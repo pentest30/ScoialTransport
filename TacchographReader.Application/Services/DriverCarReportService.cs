@@ -94,7 +94,8 @@ namespace TachographReader.Application.Services
                 }
 
                 SetDurationsOfActivities(dayActivity);
-                report.DailyActivities.Add(dayActivity);
+               if(dayActivity.Activities.Any())
+                   report.DailyActivities.Add(dayActivity);
             }
 
             var firstItem = dailyActivities.FirstOrDefault(x=>!string.IsNullOrEmpty(x.Name));

@@ -13,6 +13,8 @@
                 .Name("socialData").RowId("id").ClassName("table table-bordered dataTable")
                 .Columns(cols =>
                 {
+                    //cols.Add(c => c.WeekNumber).Data("weekNumber").Title(_loc.GetLocalizedHtmlString("WeekNumber").Value);
+
                     cols.Add(c => c.Date).Data("date").Title(_loc.GetLocalizedHtmlString("Date").Value);
                     cols.Add(c => c.TotalService).Data("totalService").Title(_loc.GetLocalizedHtmlString("Total service").Value);
                     cols.Add(c => c.TotalDrive).Data("totalDrive").Title(_loc.GetLocalizedHtmlString("Total drive").Value);
@@ -28,7 +30,7 @@
                 })
                 .ServerSide(false)
                 .Searching(false)
-                .Paging(true)
+                .Paging(false)
                 )
         </div>
     </div>
@@ -39,6 +41,10 @@
         return ' <a type="button" onClick="onActClick(this)"  data-type="remove" class="btn btn-sm btn-default" ><i class="fa fa-lg fa-fw fa-bar-chart-o"></i></a>'
             ;
        // return  'nik mok'
+    }
+    function renderWeek(val) {
+        
+        return val;
     }
     function onActClick(tr) {
         var row = $("#socialData").DataTable().row($(tr).parents('tr'));

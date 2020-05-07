@@ -85,6 +85,7 @@
                     $("#start_datetime").hide();
                     $("#end_datetime").hide();
                     currentPeriod = null;
+                   
                 }
                     break;
                 case "CW": {
@@ -94,6 +95,7 @@
                    $("#start_datetime").hide();
                     $("#end_datetime").hide();
                     currentPeriod = null;
+                 
                 }
                     break;
                 case "LM": {
@@ -103,6 +105,7 @@
                     $("#start_datetime").hide();
                     $("#end_datetime").hide();
                     currentPeriod = null;
+                   
                     }
                     break;
                 case "LW": {
@@ -112,6 +115,7 @@
                     $("#start_datetime").hide();
                     $("#end_datetime").hide();
                     currentPeriod = null;
+                 
                     }
                     break;
                 case "P":
@@ -142,6 +146,7 @@
             endPeriod = moment(ep).toDate();
 
         }
+        
         $.ajax({
             url: '@Url.Action("GetSocialDataReport", "SocialData")',
             type: 'POST',

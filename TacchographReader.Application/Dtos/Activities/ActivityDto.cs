@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security;
 using tacchograaph_reader.Core.Entities;
 
 namespace TachographReader.Application.Dtos.Activities

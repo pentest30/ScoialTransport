@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using TachographReader.Application.Dtos.Activities;
+using TachographReader.Web.Helpers;
 
 namespace TachographReader.Web.Models
 {
@@ -10,10 +12,12 @@ namespace TachographReader.Web.Models
         {
             Id = report.Id.ToString();
             Activities = report.Activities;
+            WeekNumber = $"Week  { DateHelper.GetWeekNumberOfMonth(report.Date)} of {CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(report.Date.Month)} {report.Date.Year}";
             Activities.ForEach(x=>
             {
                 x.EndUtc = x.EndUtc.ToLocalTime();
                 x.StartUtc = x.StartUtc.ToLocalTime();
+               
             });
 
             Date = report.Date;
@@ -37,5 +41,7 @@ namespace TachographReader.Web.Models
         public string TotalBreakRest { get; set; }
         public string TotalNightHour { get; set; }
         public string Id { get; set; }
+
+        public string WeekNumber { get; set; }
     }
 }

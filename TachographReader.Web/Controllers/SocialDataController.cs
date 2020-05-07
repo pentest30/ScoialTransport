@@ -51,7 +51,7 @@ namespace TachographReader.Web.Controllers
             var driverDailyActivityVViewModels = dailyServices as DriverDailyActivityVViewModel[] ?? dailyServices.ToArray();
             memoryCache.Set(key1, driverDailyActivityVViewModels);
             memoryCache.Set(key2, total);
-            return Json(new {totalService = total, dailyActivities = driverDailyActivityVViewModels});
+            return Json(new {totalService = total, dailyActivities = driverDailyActivityVViewModels.OrderBy(x=>x.Date)});
         }
 
         [HttpGet]
