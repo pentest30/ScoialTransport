@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -15,7 +14,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using tacchograaph_reader.Core.Commands.DddFiles;
 using tacchograaph_reader.Core.Entities;
-using tacchograaph_reader.Core.IO;
 using TachographReader.Application.helpers;
 using TachoReader.Data.Data;
 

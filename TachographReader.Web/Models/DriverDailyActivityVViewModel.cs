@@ -41,7 +41,6 @@ namespace TachographReader.Web.Models
         public string TotalBreakRest { get; set; }
         public string TotalNightHour { get; set; }
         public string Id { get; set; }
-
         public string WeekNumber { get; set; }
     }
 }

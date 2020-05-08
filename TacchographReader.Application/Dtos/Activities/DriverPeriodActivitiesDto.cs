@@ -8,6 +8,7 @@ namespace TachographReader.Application.Dtos.Activities
         public DriverPeriodActivitiesDto()
         {
             DailyActivities = new List<DriverDailyActivityDto>();
+            DriverServices = new List<DriverService>();
         }
         public DateTime StartPeriod { get; set; }
         public DateTime EndPeriod { get; set; }
@@ -20,5 +21,6 @@ namespace TachographReader.Application.Dtos.Activities
         public TimeSpan TotalBreakRest { get; set; }
         public TimeSpan TotalNightHour { get; set; }
         public List<DriverDailyActivityDto> DailyActivities { get; set; }
+        public List<DriverService> DriverServices { get; set; }
     }
 }

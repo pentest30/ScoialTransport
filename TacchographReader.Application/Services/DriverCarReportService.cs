@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using tacchograaph_reader.Core.Commands.DddFiles;
 using tacchograaph_reader.Core.Entities;
+using tacchograaph_reader.Core.Extensions;
 using TachographReader.Application.Dtos.Activities;
 using TachoReader.Data.Data;
 
@@ -24,27 +26,17 @@ namespace TachographReader.Application.Services
         {
             var startPeriod = start.ToUniversalTime();
             var endPeriod = end.ToUniversalTime();
-            var dailyActivities = await (from identifier in Context.Identifiers
-                    from activity in Context.CardDriverActivities
-                    join dailyAct in Context.CardActivityDailyRecords on identifier.CardNumber equals dailyAct
-                        .CardNumber
-                    from driver in Context.Drivers where driver.Id == driverId
-                    where identifier.DriverId == driverId && activity.ActivityDailyRecordId == dailyAct.Id &&
-                          activity.ActivityUtc >= startPeriod && activity.ActivityUtc <= endPeriod
-                    orderby dailyAct.Date
-                    select new
-                    {
-                        driver.Name,
-                        dailyAct.CardNumber,
-                        dailyAct.Date,
-                        dailyAct.TotalDistance,
-                        activity.TimeSpan,
-                        activity.CardPresent,
-                        activity.DriverActivityType,
-                        activity.ActivityUtc
-                    }).Distinct().ToListAsync()
-                .ConfigureAwait(false);
-            await mediator.Publish(new ProgressNotification { Value = 50}).ConfigureAwait(false);
+            var dailyActivities = await DailyActivities(driverId, startPeriod, endPeriod).ConfigureAwait(false);
+            var lastActivity = dailyActivities.FirstOrDefault();
+            if (lastActivity != null)
+            {
+                var previousAct = await GetPreviousActivityAsync(driverId, startPeriod, lastActivity.CardNumber)
+                    .ConfigureAwait(false);
+                if (previousAct != null)
+                    dailyActivities.Add(previousAct);
+            }
+
+            await mediator.Publish(new ProgressNotification {Value = 50}).ConfigureAwait(false);
             var activitiesDates = dailyActivities
                 .Select(x => x.Date)
                 .Distinct()
@@ -94,27 +86,162 @@ namespace TachographReader.Application.Services
                 }
 
                 SetDurationsOfActivities(dayActivity);
-               if(dayActivity.Activities.Any())
-                   report.DailyActivities.Add(dayActivity);
+                if (dayActivity.Activities.Any())
+                    report.DailyActivities.Add(dayActivity);
             }
 
-            var firstItem = dailyActivities.FirstOrDefault(x=>!string.IsNullOrEmpty(x.Name));
+            var firstItem = dailyActivities.FirstOrDefault(x => !string.IsNullOrEmpty(x.Name));
             if (firstItem != null)
                 report.FullName = firstItem.Name;
             report.StartPeriod = startPeriod;
             report.EndPeriod = endPeriod;
-            await mediator.Publish(new ProgressNotification { Value = 80 }).ConfigureAwait(false);
+            await mediator.Publish(new ProgressNotification {Value = 80}).ConfigureAwait(false);
             CalculateCumulServices(report);
-            await mediator.Publish(new ProgressNotification { Value = 100 }).ConfigureAwait(false);
-
+            report.DriverServices= DetectionOfDriverServices(report.DailyActivities);
+            await mediator.Publish(new ProgressNotification {Value = 100}).ConfigureAwait(false);
             return report;
         }
 
+        private  List<DriverService> DetectionOfDriverServices(List<DriverDailyActivityDto> report)
+        {
+            var periods = new List<Period>();
+            var listOfAllActivities = new List<ActivityDto>();
+            var dailyActs = new List<DriverDailyActivityDto>(report);
+            var driverServices = new List<DriverService>();
+            foreach (var driverDailyActivityDto in dailyActs)
+            {
+                var activities = new List<ActivityDto>();
+                activities =(List<ActivityDto>) driverDailyActivityDto.Activities.Clone();
+                var fActivity = activities.OrderBy(x => x.StartUtc).FirstOrDefault();
+                // if the first  activity with break rest type does not begin from 00 :00 
+                if (fActivity != null && fActivity.ActivityType == DriverActivityType.Break)
+                    fActivity.StartUtc = fActivity.StartUtc.Date;
+                // add all daily activities in one list in order to merge the same activities
+                listOfAllActivities.AddRange(activities);
+            }
+
+            // merges same activities
+            var mergedList = MergeSameActivities(listOfAllActivities.OrderBy(x => x.StartUtc).ToList());
+            // detects long breaks after or befor the service (break > 7 hours)  
+            periods.AddRange(CutC1BActivities(mergedList));
+
+           
+            foreach (var period in periods.OrderBy(x => x.Start))
+                CreateListOfService(period, driverServices);
+
+            foreach (var driverService in driverServices)
+            {
+                if (driverService.BreakAfterService == null || driverService.BreakBeforeService == null) continue;
+                driverService.BeginningServiceTime = driverService.BreakBeforeService.EndingBServiceTime;
+                driverService.EndingBServiceTime = driverService.BreakAfterService.BeginningBreakTime;
+            }
+
+            return driverServices;
+        }
+
+        private static void CreateListOfService(Period period, List<DriverService> driverServices)
+        {
+
+            if (driverServices.Any())
+            {
+                driverServices.Last().BreakAfterService = new BreakAfterService
+                {
+                    BeginningBreakTime = period.Start,
+                    EndingBServiceTime = period.Start.Date != period.End.Date
+                        ? period.End.Date.AddTicks(-1)
+                        : period.End,
+                };
+            }
+
+            // two service of different days
+            if (period.Start.Date != period.End.Date)
+            {
+                driverServices.Add(new DriverService
+                {
+                    BreakBeforeService = new BreakBeforeService
+                    {
+                        BeginningBreakTime = period.Start,
+                        EndingBServiceTime = period.End.Date.AddTicks(-1),
+                    }
+                });
+                driverServices.Add(new DriverService
+                {
+                    BreakBeforeService = new BreakBeforeService
+                    {
+                        BeginningBreakTime = period.End.Date,
+                        EndingBServiceTime = period.End,
+                    }
+                });
+            }
+            else
+            {
+                driverServices.Add(new DriverService
+                {
+                    BreakBeforeService = new BreakBeforeService
+                    {
+                        BeginningBreakTime = period.Start,
+                        EndingBServiceTime = period.End,
+                    }
+                });
+            }
+        }
+
+        private async Task<List<ActivityQuery>> DailyActivities(Guid driverId, DateTime startPeriod, DateTime endPeriod)
+        {
+            var dailyActivities = await (from identifier in Context.Identifiers
+                    from activity in Context.CardDriverActivities
+                    join dailyAct in Context.CardActivityDailyRecords on identifier.CardNumber equals dailyAct
+                        .CardNumber
+                    from driver in Context.Drivers
+                    where driver.Id == driverId
+                    where identifier.DriverId == driverId && activity.ActivityDailyRecordId == dailyAct.Id &&
+                          activity.ActivityUtc >= startPeriod && activity.ActivityUtc <= endPeriod
+                    orderby dailyAct.Date
+                    select new ActivityQuery
+                    {
+                        Name = driver.Name,
+                        CardNumber = dailyAct.CardNumber,
+                        Date = dailyAct.Date,
+                        TotalDistance = dailyAct.TotalDistance,
+                        TimeSpan = activity.TimeSpan,
+                        CardPresent = activity.CardPresent,
+                        DriverActivityType = activity.DriverActivityType,
+                        ActivityUtc = activity.ActivityUtc
+                    }).Distinct().ToListAsync()
+                .ConfigureAwait(false);
+            return dailyActivities;
+        }
+
+        private async Task<ActivityQuery> GetPreviousActivityAsync ( Guid driverId, DateTime date , string cardNumber)
+        {
+            var startPeriod = date.Date;
+            var query = await (from identifier in Context.Identifiers
+                from activity in Context.CardDriverActivities
+                join dailyAct in Context.CardActivityDailyRecords on identifier.CardNumber equals dailyAct
+                    .CardNumber
+                from driver in Context.Drivers
+                where driver.Id == driverId
+                where identifier.DriverId == driverId && activity.ActivityDailyRecordId == dailyAct.Id &&
+                      activity.ActivityUtc > startPeriod && activity.ActivityUtc < date
+                orderby activity.ActivityUtc descending
+                select new ActivityQuery
+                {
+                    Name = driver.Name,
+                    CardNumber = dailyAct.CardNumber,
+                    Date = dailyAct.Date,
+                    TotalDistance = dailyAct.TotalDistance,
+                    TimeSpan = activity.TimeSpan,
+                    CardPresent = activity.CardPresent,
+                    DriverActivityType = activity.DriverActivityType,
+                    ActivityUtc = activity.ActivityUtc
+                }).FirstOrDefaultAsync().ConfigureAwait(false);
+            return query;
+        }
         private static void SetDurationsOfActivities(DriverDailyActivityDto dayActivity)
         {
             foreach (var dayActivityActivity in dayActivity.Activities.OrderBy(x => x.StartUtc))
             {
-                Console.WriteLine("start: " + dayActivityActivity.StartUtc + " end: " + dayActivityActivity.EndUtc);
+                //Console.WriteLine("start: " + dayActivityActivity.StartUtc + " end: " + dayActivityActivity.EndUtc);
                 dayActivityActivity.Duration = (dayActivityActivity.EndUtc - dayActivityActivity.StartUtc).TotalSeconds;
             }
         }
@@ -172,7 +299,71 @@ namespace TachographReader.Application.Services
                     report.TotalNightHour += activity.EndUtc.ToLocalTime().TimeOfDay - activity.StartUtc.ToLocalTime().TimeOfDay;
             }
         }
+
+        private static List<ActivityDto> MergeSameActivities(List<ActivityDto> c1BActivityList)
+        {
+            var result = new List<ActivityDto>();
+            var removeList = new List<ActivityDto>();
+            var fistAct = default(ActivityDto);
+            foreach (var activityDto in c1BActivityList)
+            {
+                if (fistAct!= default&& (Math.Abs((activityDto.StartUtc- fistAct.EndUtc).TotalSeconds) <= 0 ||fistAct.EndUtc.AddDays(1).Date  == activityDto.StartUtc )&& fistAct.ActivityType == activityDto.ActivityType)
+                {
+                    fistAct.EndUtc = activityDto.EndUtc;
+                    removeList.Add(activityDto);
+                }
+                else fistAct = activityDto;
+            }
+           
+            foreach (var activityDto in removeList)
+                c1BActivityList.Remove(activityDto);
+            result.AddRange(c1BActivityList);
+            return c1BActivityList;
+
+        }
+        private static List<Period> CutC1BActivities(List<ActivityDto> c1BActivityList)
+        {
+            var periods = new List<Period>();
+            foreach (var activity in c1BActivityList.OrderBy(x => x.StartUtc))
+            {
+                if ((activity.EndUtc - activity.StartUtc).TotalHours > 7 && activity.ActivityType == DriverActivityType.Break)
+                {
+                   periods.Add(new Period
+                    {
+                        Start = activity.StartUtc,
+                        ActivityType = activity.ActivityType,
+                        End = activity.EndUtc
+                    });
+                }
+            }
+
+            foreach (var period in periods)
+            {
+                Console.WriteLine("Period  start: " + period.Start + " end: " + period.End);
+            }
+            return periods;
+        }
+
+
+    }
+
+    internal class Period
+    {
+        //public DateTime Date { get; set; }
+        public DateTime Start { get; set; }
+        public DateTime End { get; set; }
+        public DriverActivityType ActivityType { get; set; }
      
-     
+    }
+    internal class ActivityQuery
+    {
+        public DateTime Date;
+        public string Name { get; set; }
+        public string CardNumber { get; set; }
+        public double TotalDistance { get; set; }
+        public TimeSpan TimeSpan { get; set; }
+        public bool CardPresent { get; set; }
+        public DriverActivityType DriverActivityType { get; set; }
+        public DateTime ActivityUtc { get; set; }
     }
 }

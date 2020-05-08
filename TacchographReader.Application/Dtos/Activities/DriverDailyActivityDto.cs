@@ -20,5 +20,6 @@ namespace TachographReader.Application.Dtos.Activities
         public TimeSpan TotalBreakRest { get; set; }
         public TimeSpan TotalNightHour { get; set; }
         public Guid Id { get; set; }
+        
     }
 }
