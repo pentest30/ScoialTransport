@@ -6,7 +6,7 @@ using TachographReader.Application.Dtos.Driver;
 
 namespace TachographReader.Application.Services
 {
-    public class DetectionOfIndemnities 
+    public class DetectionOfindemnities 
     {
         public DriverPeriodActivitiesDto DriverPeriodActivities { get ; set ; }
 
