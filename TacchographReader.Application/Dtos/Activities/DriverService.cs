@@ -10,5 +10,6 @@ namespace TachographReader.Application.Dtos.Activities
         public DateTime BeginningServiceTime { get; set; }
         public DateTime EndingBServiceTime { get; set; }
         public List<ActivityDto> Activities { get; set; }
+        public int TotalDistance { get; set; }
     }
 }

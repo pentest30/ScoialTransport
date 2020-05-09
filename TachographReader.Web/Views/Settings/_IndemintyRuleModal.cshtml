@@ -1,0 +1,101 @@
+﻿@model TachographReader.Web.Models.IndemnityRuleWieModel
+    <div id="upload-modal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">@_loc.GetLocalizedHtmlString("Add new indemnity rule").Value</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <form class="form-horizontal" method="post" action="@Url.Action("EditDriver", "Driver")">
+                            <div id="Employee" class="reviewBlock" data-content="Form" style="padding-left: 30px; background-color: white;">
+
+                                <div class="row">
+                                    <div class="form-group row">
+                                        <label for="text1" class="col-sm-3 control-label">@_loc.GetLocalizedHtmlString("Label").Value <font class="redFont">*</font> </label>
+                                        <div class="controls col-sm-6">
+                                            <input style="text-transform:uppercase" asp-for="Label" type="text" class="form-control">
+                                            <span asp-validation-for="Label" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="text1" class="col-sm-3 control-label">@_loc.GetLocalizedHtmlString("Price").Value <font class="redFont">*</font> </label>
+                                        <div class="controls col-sm-6">
+                                            <input asp-for="Price" type="number" class="form-control">
+                                            <span asp-validation-for="Price" class="text-danger"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 control-label">@_loc.GetLocalizedHtmlString("First start time").Value </label>
+                                        <div class="controls col-sm-6">
+                                            <input asp-for="StarTime" id="StarTime" type="text" class="form-control">
+                                            <span asp-validation-for="StarTime" class="text-danger"></span>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 control-label">@_loc.GetLocalizedHtmlString("First end time").Value </label>
+                                        <div class="controls col-sm-6">
+                                            <input asp-for="EndTime" type="text" id="endTime" class="form-control">
+                                            <span asp-validation-for="EndTime" class="text-danger"></span>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 control-label">@_loc.GetLocalizedHtmlString("Second start time").Value </label>
+                                        <div class="controls col-sm-6">
+                                            <input id="SecondStartTime" asp-for="SecondStarTime" type="text" class="form-control">
+                                            <span asp-validation-for="SecondStarTime" class="text-danger"></span>
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 control-label">@_loc.GetLocalizedHtmlString("Second end time").Value </label>
+                                        <div class="controls col-sm-6">
+                                            <input asp-for="SecondEndTime" id="SecondEndTime" type="text" class="form-control">
+                                            <span asp-validation-for="SecondEndTime" class="text-danger"></span>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="control-group row">
+                                        <div class="controls col-sm-9">
+                                            <button type="submit" class="saveBtn btn btn-primary pull-right"><i class="fa fa-save"></i> @_loc.GetLocalizedHtmlString("Save").Value</button>
+                                            <a href="@Url.Action("Index")" class="cancelBtn btn pull-right" style="margin-right:5px;"><i class="fa fa-times-circle-o"></i> @_loc.GetLocalizedHtmlString("Cancel").Value</a>
+                                        </div>
+                                        <div class="controls col-sm-3">
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" onclick="uploadFiles('files')">@_loc.GetLocalizedHtmlString("SaveFile").Value</button>
+
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+    
+<script>
+    $(document).ready(function() {
+        var stime = $('#StartTime').timepicker('showWidget');
+        var etime = $('#endTime').timepicker('showWidget');
+        var sstime = $("#SecondStartTime").timepicker('showWidget');
+        var setime = $("#SecondEndTime").timepicker('showWidget');
+    })
+</script>

@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TachographReader.Applicatio
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TachographReader.Web", "TachographReader.Web\TachographReader.Web.csproj", "{97590008-9423-4AEE-B87B-1238BAB630D6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TachographReader.Test", "TachographReader.Test\TachographReader.Test.csproj", "{1BBFADCA-852C-48DC-B365-6819A20A4CB0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,12 +47,16 @@ Global
 		{97590008-9423-4AEE-B87B-1238BAB630D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{97590008-9423-4AEE-B87B-1238BAB630D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{97590008-9423-4AEE-B87B-1238BAB630D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1BBFADCA-852C-48DC-B365-6819A20A4CB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1BBFADCA-852C-48DC-B365-6819A20A4CB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1BBFADCA-852C-48DC-B365-6819A20A4CB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1BBFADCA-852C-48DC-B365-6819A20A4CB0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {4F90B03B-1743-429F-8BEA-B5A469D00A32}
 		RESX_ConfirmAddLanguageFile = False
+		SolutionGuid = {4F90B03B-1743-429F-8BEA-B5A469D00A32}
 	EndGlobalSection
 EndGlobal

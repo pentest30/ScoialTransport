@@ -1,0 +1,25 @@
+﻿
+
+<div class="row">
+    <div class="col-xs-12">
+        @if (User.IsInRole("admin") || User.IsInRole("user"))
+        {
+            <a href="@Url.Action("Create")" class="btn btn-small btn-primary">@_loc.GetLocalizedHtmlString("Add new volunteer").Value <i class="fa fa-plus"></i></a>
+        }
+        <button onclick="modJs.showFilters();return false;" class="btn btn-small btn-primary">@_loc.GetLocalizedHtmlString("Filter").Value <i class="fa fa-filter"></i></button>&nbsp;&nbsp;<button id="Employee_resetFilters" onclick="modJs.resetFilters();return false;" class="btn btn-small btn-default" style="display: none;">Reset Filters <i class="fa fa-times"></i></button>
+        <a onclick="getExcel(); return false;" class="btn btn-small btn-primary">@_loc.GetLocalizedHtmlString("Export Excel").Value <i class="fa fa-file"></i></a>
+
+    </div>
+    <div class="box-body table-responsive" style="margin-top:30px">
+
+        <div class="row ">
+            <div style="margin: 20px">
+
+               
+            </div>
+        </div>
+    </div>
+    @{
+        Html.RenderPartial("_IndemintyRuleModal");
+    }
+</div>
