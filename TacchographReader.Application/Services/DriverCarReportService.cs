@@ -99,7 +99,7 @@ namespace TachographReader.Application.Services
             CalculateCumulServices(DriverPeriodActivities);
             var detectionService = new DetectionOfDriverService();
             DriverPeriodActivities.DriverServices= detectionService.DetectionOfDriverServices(DriverPeriodActivities.DailyActivities);
-            DetectionOfIndemnities indemnities = new DetectionOfIndemnities();
+            DetectionOfindemnities indemnities = new DetectionOfindemnities();
             indemnities.DriverPeriodActivities = DriverPeriodActivities;
             indemnities.DetectIndemnities();
             await mediator.Publish(new ProgressNotification {Value = 100}).ConfigureAwait(false);
